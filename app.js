@@ -6,7 +6,6 @@ const PORT = 3002;
 const {traerEstudiante, agregarEstudiante, eliminarEstudiante, actualizarEstudiante, contarEstudiante} = require ("./models/estudiantesModel")
 const { traerProfesor, agregarProfesor, eliminarProfesor, actualizarProfesor, contarProfesor, } = require("./models/profesoresModel");
 const { traerMatricula,agregarMatricula, eliminarMatricula, actualizarMatricula} = require("./models/matriculaModel");
-const { traerCurso, agregarCurso, eliminarCurso, } = require("./models/cursosModel");
 
 app.use(express.json())
 
@@ -34,11 +33,6 @@ app.get("/matriculas",(req,res)=>{
     })
 })
 
-app.get("/cursos",(req,res)=>{
-    traerCurso((results)=>{
-        res.json(results);
-    })
-})
 
 
 
@@ -88,18 +82,7 @@ app.post("/matriculas", (req,res)=>{
     }
 })
 
-app.post("/cursos", (req,res)=>{
-    const nuevoCurso = req.body;
-    
-    if(!nuevoCurso.nombre || !nuevoCurso.descripcion){
-        return res.send("Faltan datos");
-    }
-    else{
-        agregarCurso(nuevoCurso,(result)=>{
-            res.json({menssage:"curso agregado"})
-        })
-    }
-})
+
 
 
 ////////////////////AGREGAR///////////////////////////////
@@ -138,15 +121,6 @@ app.delete("/matriculas/:id", (req, res) => {
     });
 });
 
-app.delete("/cursos/:id", (req, res) => {
-    let elimCurso = req.params.id;
-    eliminarCurso(elimCurso, (err, results) => {
-        if (err) {
-            return res.send("Error al eliminar el curso");
-        }
-        res.json({ message: "curso eliminado" });
-    });
-});
 
 
 
@@ -191,10 +165,11 @@ app.put("/matriculas/:id",(req, res) =>{
             console.error("Error al actualizar datos de matricula")
         }
         else{
-            return res.json ({mensaje:"Datos del matricula actualizados"})
+            return res.json ({mensaje:"Datos de matricula actualizados"})
         }
     })
 })
+
 
 
 
@@ -212,6 +187,12 @@ app.get("/estudiantess",(req,res)=>{
 })
 
 app.get("/profesoress",(req,res)=>{
+    contarProfesor((results)=>{
+        res.json(results);
+    })
+})
+
+app.get("/matriculass",(req,res)=>{
     contarProfesor((results)=>{
         res.json(results);
     })

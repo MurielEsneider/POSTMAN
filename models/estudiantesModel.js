@@ -54,10 +54,10 @@ function eliminarEstudiante(elimEstudiante, callback){
 
 
 function actualizarEstudiante(idEstudiante, nuevosDatosEstudiante, callback){
-    const actEstudiante = "UPDATE estudiantes SET nombre=?,apellido=?,fechaNacimiento=?,cursoI=? WHERE id=?";
+    const actEstudiante = "UPDATE estudiantes SET nombre=?,apellido=?,fechaNacimiento=?,curso=? WHERE id=?";
     userdb.query(actEstudiante,[nuevosDatosEstudiante.nombre, nuevosDatosEstudiante.apellido, nuevosDatosEstudiante.fechaNacimiento, nuevosDatosEstudiante.curso, idEstudiante], (err, result)=>{
         if(err){
-            console.log("Error al agregar estudiante")
+            console.log("Error al actualizar estudiante")
         }
         else{
             callback(result)

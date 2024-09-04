@@ -25,6 +25,7 @@ function agregarProfesor(nuevoProfesor, callback){
             console.log("Error al agregar profesores")
         }
         else{
+            console.log("profesor agregado con éxito");
             callback(results);
         }
     })

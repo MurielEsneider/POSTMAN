@@ -69,29 +69,26 @@ function eliminarMatricula(elimMatricula, callback) {
 
 
 
-
-
-
-
-function actualizarMatricula(idMatricula, nuevosDatosMatricula, callback){
-    const actMatricula = "UPDATE matriculas SET idEstudianteMatricula=?,fechaMatricula=?";
-    userdb.query(actMatricula,[nuevosDatosMatricula.idEstudianteMatricula, nuevosDatosMatricula.fechaMatricula, idMatricula], (err, result)=>{
-        if(err){
-            console.log("Error al agregar estudiante")
+function actualizarMatricula(idMatricula, nuevosDatosMatricula, callback) {
+    const actMatricula = "UPDATE matriculas SET idEstudianteMatricula = ?, fechaMatricula = ? WHERE id = ?";
+    userdb.query(actMatricula, [nuevosDatosMatricula.idEstudianteMatricula, nuevosDatosMatricula.fechaMatricula, idMatricula], (err, result) => {
+        if(err) {
+            console.log("Error al actualizar matricula:", err);
+        } 
+        else {
+            callback(result);
         }
-        else{
-            callback(result)
-        }
-    })
+    });
 }
 
 
 
 
 
-function contarEstudiante(callback){
-    const contEstudiante = "SELECT COUNT (id) FROM estudiantes";
-    userdb.query(contEstudiante,(err, results)=>{
+
+function contarMatricula(callback){
+    const contMatricula = "SELECT COUNT (id) FROM matriculas";
+    userdb.query(contMatricula,(err, results)=>{
         if(err){
             console.log("consulta no realizada")
         }
@@ -102,4 +99,4 @@ function contarEstudiante(callback){
 }
 
 
-module.exports = {traerMatricula, agregarMatricula, eliminarMatricula, actualizarMatricula, contarEstudiante}
+module.exports = {traerMatricula, agregarMatricula, eliminarMatricula, actualizarMatricula, contarMatricula}
