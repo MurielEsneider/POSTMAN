@@ -5,7 +5,7 @@ const PORT = 3002;
 
 const {traerEstudiante, agregarEstudiante, eliminarEstudiante, actualizarEstudiante, contarEstudiante} = require ("./models/estudiantesModel")
 const { traerProfesor, agregarProfesor, eliminarProfesor, actualizarProfesor, contarProfesor, } = require("./models/profesoresModel");
-const { traerMatricula,agregarMatricula, eliminarMatricula, actualizarMatricula} = require("./models/matriculaModel");
+const { traerMatricula,agregarMatricula, eliminarMatriculaE,eliminarMatriculaP ,actualizarMatricula,contarMatricula} = require("./models/matriculaModel");
 
 app.use(express.json())
 
@@ -72,7 +72,7 @@ app.post("/profesores", (req,res)=>{
 app.post("/matriculas", (req,res)=>{
     const nuevaMatricula = req.body;
     
-    if(!nuevaMatricula.idEstudianteMatricula || !nuevaMatricula.fechaMatricula){
+    if(!nuevaMatricula.idEstudianteMatricula || !nuevaMatricula.fechaMatricula || !nuevaMatricula.idProfesorMatricula ){
         return res.send("Faltan datos");
     }
     else{
@@ -111,9 +111,19 @@ app.delete("/profesores/:id", (req, res) => {
     });
 });
 
-app.delete("/matriculas/:id", (req, res) => {
+app.delete("/matriculasE/:id", (req, res) => {
     let elimMatricula = req.params.id;
-    eliminarMatricula(elimMatricula, (err, results) => {
+    eliminarMatriculaE(elimMatricula, (err, results) => {
+        if (err) {
+            return res.send("Error al eliminar el matricula");
+        }
+        res.json({ message: "matricula eliminado" });
+    });
+});
+
+app.delete("/matriculasP/:id", (req, res) => {
+    let elimMatricula = req.params.id;
+    eliminarMatriculaP(elimMatricula, (err, results) => {
         if (err) {
             return res.send("Error al eliminar el matricula");
         }
@@ -193,7 +203,7 @@ app.get("/profesoress",(req,res)=>{
 })
 
 app.get("/matriculass",(req,res)=>{
-    contarProfesor((results)=>{
+    contarMatricula((results)=>{
         res.json(results);
     })
 })
@@ -202,8 +212,6 @@ app.get("/matriculass",(req,res)=>{
 
 
 ////////////////////CONTAR///////////////////////////////
-
-
 
 
 

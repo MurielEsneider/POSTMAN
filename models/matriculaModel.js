@@ -19,8 +19,8 @@ function traerMatricula(callback){
 
 
 function agregarMatricula( nuevaMatricula, callback){
-    let addMatricula = "INSERT INTO matriculas(idEstudianteMatricula,fechaMatricula) VALUES (?,?)";
-    userdb.query(addMatricula,[nuevaMatricula.idEstudianteMatricula, nuevaMatricula.fechaMatricula], (err, results)=>{
+    let addMatricula = "INSERT INTO matriculas(idEstudianteMatricula,fechaMatricula,idProfesorMatricula) VALUES (?,?,?)";
+    userdb.query(addMatricula,[nuevaMatricula.idEstudianteMatricula, nuevaMatricula.fechaMatricula, nuevaMatricula.idProfesorMatricula], (err, results)=>{
         if(err){
             console.log("Error al agregar matricula", err);
             return callback(err, null);
@@ -32,7 +32,9 @@ function agregarMatricula( nuevaMatricula, callback){
 }
 
 
-function eliminarMatricula(elimMatricula, callback) {
+
+
+function eliminarMatriculaE(elimMatricula, callback) {
     userdb.query('SELECT idEstudianteMatricula FROM matriculas WHERE id = ?', [elimMatricula], (err, results) => {
         if (err) {
             console.log("Error al obtener el ID del estudiante", err);
@@ -55,7 +57,37 @@ function eliminarMatricula(elimMatricula, callback) {
                     console.log("Error al eliminar al estudiante", err);
                     return callback(err);
                 }
+                callback(null, { message: 'Matrícula y estudiante eliminados' });
+            });
+        });
+    });
+}
 
+
+
+function eliminarMatriculaP(elimMatricula, callback) {
+    userdb.query('SELECT idProfesorMatricula FROM matriculas WHERE id = ?', [elimMatricula], (err, results) => {
+        if (err) {
+            console.log("Error al obtener el ID del profesor", err);
+            return callback(err);
+        }
+
+        if (results.length === 0) {
+            return callback(new Error('Matrícula no encontrada'));
+        }
+
+        const elimProfesor = results[0].idProfesorMatricula;
+
+        userdb.query('DELETE FROM matriculas WHERE id = ?', [elimMatricula], (err) => {
+            if (err) {
+                console.log("Error al eliminar la matrícula", err);
+                return callback(err);
+            }
+            userdb.query('DELETE FROM profesores WHERE id = ?', [elimProfesor], (err) => {
+                if (err) {
+                    console.log("Error al eliminar al estudiante", err);
+                    return callback(err);
+                }
                 callback(null, { message: 'Matrícula y estudiante eliminados' });
             });
         });
@@ -68,10 +100,9 @@ function eliminarMatricula(elimMatricula, callback) {
 
 
 
-
 function actualizarMatricula(idMatricula, nuevosDatosMatricula, callback) {
-    const actMatricula = "UPDATE matriculas SET idEstudianteMatricula = ?, fechaMatricula = ? WHERE id = ?";
-    userdb.query(actMatricula, [nuevosDatosMatricula.idEstudianteMatricula, nuevosDatosMatricula.fechaMatricula, idMatricula], (err, result) => {
+    const actMatricula = "UPDATE matriculas SET idEstudianteMatricula = ?, fechaMatricula = ?, idProfesorMatricula = ? WHERE id = ?";
+    userdb.query(actMatricula, [nuevosDatosMatricula.idEstudianteMatricula, nuevosDatosMatricula.fechaMatricula, nuevosDatosMatricula.idProfesorMatricula, idMatricula], (err, result) => {
         if(err) {
             console.log("Error al actualizar matricula:", err);
         } 
@@ -80,7 +111,6 @@ function actualizarMatricula(idMatricula, nuevosDatosMatricula, callback) {
         }
     });
 }
-
 
 
 
@@ -99,4 +129,4 @@ function contarMatricula(callback){
 }
 
 
-module.exports = {traerMatricula, agregarMatricula, eliminarMatricula, actualizarMatricula, contarMatricula}
+module.exports = {traerMatricula, agregarMatricula, eliminarMatriculaE,eliminarMatriculaP, actualizarMatricula, contarMatricula}
